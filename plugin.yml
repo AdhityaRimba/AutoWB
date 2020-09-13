@@ -1,0 +1,11 @@
+main: xyz.adhdev.autowb.Main
+name: AutoWB
+version: 1.0
+author: MrAdhit
+description: Auto Activate WorldBorder When No One In Server
+commands:
+    startautowb:
+       description: Start AutoWB
+       usage: /startautowb
+       permission: autowb.start
+       permission-message: You don't have the autowb.start permission..
