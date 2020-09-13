@@ -1,2 +1,2 @@
 # AutoWB
- Auto Turn Off World Border When There's a Player
+moved to https://github.com/AdhityaRimba/AutoWorldBorder
