@@ -21,6 +21,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
     	Bukkit.getServer().getPluginManager().registerEvents(this, this);
     	createConfig();
+    	autoWBStart();
     	Logs("Started");
     }
 
@@ -60,14 +61,20 @@ public class Main extends JavaPlugin implements Listener {
     
     public void autoWBStart() {
     	int pcount = Bukkit.getServer().getOnlinePlayers().size();
+    	int minp = config.getInt("Minimum Player")-1;
     	ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
     	if(pcount == config.getInt("Minimum Player")) {
-    		Logs("There Was Player In Server, Stopping World Border");
-    		Bukkit.dispatchCommand(console, "wb fill stop");
-    	}else if(pcount == 0) {
-    		Bukkit.dispatchCommand(console, "wb world fill");
-    		Logs("There Was No Player In Server, Starting World Border");
-    		Bukkit.dispatchCommand(console, "wb fill confirm");
+    		Logs("There's "+config.getInt("Minimum Player")+" Players In Server, Stopping World Border");
+    		Bukkit.dispatchCommand(console, "wb fill pause");
+    	}else if(pcount == minp) {
+    		Logs("There Just "+minp+" Players On Server, Starting World Border");
+    		if(!start) {
+    			Bukkit.dispatchCommand(console, "wb world fill");
+    			Bukkit.dispatchCommand(console, "wb fill confirm");
+    			start = true;
+    		}else {
+    			Bukkit.dispatchCommand(console, "wb fill pause");
+    		}
     	}
     }
     
@@ -75,9 +82,12 @@ public class Main extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender,Command command,String label,String[] args) {
-    	//int pcount = Bukkit.getServer().getOnlinePlayers().size();
     	if (command.getName().equalsIgnoreCase("startautowb")) {
-            Logs(""+config.getInt("Minimum Player"));
+            if(start) {
+            	Logs("AutoWB Already Started");
+            }else {
+            	autoWBStart();
+            }
             return true;
         }
         return false;
@@ -99,5 +109,7 @@ public class Main extends JavaPlugin implements Listener {
     }
     
     FileConfiguration config = getConfig();
+    
+    public boolean start = false;
     
 }
